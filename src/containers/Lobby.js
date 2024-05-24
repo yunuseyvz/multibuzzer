@@ -98,6 +98,8 @@ export default function Lobby({ setAuth }) {
       setLoading(false);
       setError(ERROR_MESSAGE[error.message]);
     }
+    console.log('Category:', category);
+    console.log('Room created');
   }
 
   function handleSubmit(event) {

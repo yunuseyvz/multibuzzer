@@ -36,6 +36,7 @@ export default function Table(game) {
     console.log(game.G.queue, Date.now());
     console.log(game.G.question);
     console.log(game.G.category);
+    console.log(game.G);
     if (!game.G.queue[game.playerID]) {
       if (lastBuzz && Date.now() - lastBuzz < 500) {
         setTimeout(() => {
@@ -141,9 +142,9 @@ export default function Table(game) {
           <Card className="mb-4" style={{ width: '50%', color: 'black', margin: '0 auto' }}>
             <Card.Body>
               <Card.Title>Category</Card.Title>
-              <Card.Text>{game.G.category}</Card.Text>
+              <Card.Text>{game.G.category || 'No category selected'}</Card.Text>
               <Card.Title>Question</Card.Title>
-              <Card.Text>{game.G.question ? game.G.question : 'No question selected'}</Card.Text>
+              <Card.Text>{game.G.question || 'No question selected'}</Card.Text>
             </Card.Body>
           </Card>
           {!game.isConnected ? (
