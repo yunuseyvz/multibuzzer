@@ -17,6 +17,8 @@ const questions = {
   ],
 };
 
+const category = 'category1';
+
 function resetBuzzers(G) {
   G.queue = {};
 }
@@ -86,7 +88,7 @@ export const Buzzer = {
       queue: {},
       locked: false,
       question: null,
-      category: setupData.category || null,
+      category: setupData.category || 'category1',
     };
   },
   phases: {
