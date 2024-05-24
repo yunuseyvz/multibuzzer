@@ -32,10 +32,11 @@ export async function getRoom(roomId) {
   }
 }
 
-export async function createRoom() {
+export async function createRoom(category) {
   try {
-    const response = axios.post(`${LOBBY_SERVER}/games/${Buzzer.name}/create`, {
+    const response = await axios.post(`${LOBBY_SERVER}/games/${Buzzer.name}/create`, {
       numPlayers: 200,
+      category, // Pass the category here
     });
     return response;
   } catch (error) {

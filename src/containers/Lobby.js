@@ -5,6 +5,7 @@ import { get } from 'lodash';
 import { joinRoom, getRoom, createRoom } from '../lib/endpoints';
 import Header from '../components/Header';
 import Footer, { FooterSimple } from '../components/Footer';
+import { queries } from '@testing-library/react';
 
 const ERROR_TYPE = {
   emptyCode: 'emptyCode',
@@ -34,6 +35,7 @@ export default function Lobby({ setAuth }) {
   const [joinMode, setJoinMode] = useState(true);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState('');
 
   // enter room: find room, then join it
   async function enterRoom(roomId, hosting = false) {
@@ -82,10 +84,11 @@ export default function Lobby({ setAuth }) {
   }
 
   // make room: create room, then join it
+  // Modify the makeRoom function to pass the category when creating the room
   async function makeRoom() {
     setLoading(true);
     try {
-      const createRes = await createRoom();
+      const createRes = await createRoom(category); // Pass the category here
       if (createRes.status !== 200) {
         throw new Error(ERROR_TYPE.hostRoom);
       }
@@ -178,6 +181,22 @@ export default function Lobby({ setAuth }) {
             setName(e.target.value);
           }}
         />
+      </Form.Group>
+
+      <Form.Group controlId="category">
+        <Form.Label>Category</Form.Label>
+        <Form.Control
+          as="select"
+          value={category}
+          onChange={(e) => {
+            setError('');
+            setCategory(e.target.value);
+          }}
+        >
+          <option value="category1">Category 1</option>
+          <option value="category2">Category 2</option>
+          <option value="category3">Category 3</option>
+        </Form.Control>
       </Form.Group>
 
       <div className="error-message">{error}</div>

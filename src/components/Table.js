@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { get, some, values, sortBy, orderBy, isEmpty, round } from 'lodash';
 import { Howl } from 'howler';
 import { AiOutlineDisconnect } from 'react-icons/ai';
-import { Container } from 'react-bootstrap';
+import { Card, Container } from 'react-bootstrap';
 import Header from '../components/Header';
 
 export default function Table(game) {
@@ -34,9 +34,9 @@ export default function Table(game) {
 
   useEffect(() => {
     console.log(game.G.queue, Date.now());
-    // reset buzzer based on game
+    console.log(game.G.question);
+    console.log(game.G.category);
     if (!game.G.queue[game.playerID]) {
-      // delay the reset, in case game state hasn't reflected your buzz yet
       if (lastBuzz && Date.now() - lastBuzz < 500) {
         setTimeout(() => {
           const queue = queueRef.current;
@@ -45,12 +45,10 @@ export default function Table(game) {
           }
         }, 500);
       } else {
-        // immediate reset, if it's been awhile
         setBuzzer(false);
       }
     }
 
-    // reset ability to play sound if there is no pending buzzer
     if (isEmpty(game.G.queue)) {
       setSoundPlayed(false);
     } else if (loaded) {
@@ -73,7 +71,6 @@ export default function Table(game) {
     }
   };
 
-  // spacebar will buzz
   useEffect(() => {
     function onKeydown(e) {
       if (e.keyCode === 32 && !e.repeat) {
@@ -88,9 +85,8 @@ export default function Table(game) {
   const players = !game.gameMetadata
     ? []
     : game.gameMetadata
-        .filter((p) => p.name)
-        .map((p) => ({ ...p, id: String(p.id) }));
-  // host is lowest active user
+      .filter((p) => p.name)
+      .map((p) => ({ ...p, id: String(p.id) }));
   const firstPlayer =
     get(
       sortBy(players, (p) => parseInt(p.id, 10)).filter((p) => p.connected),
@@ -112,7 +108,6 @@ export default function Table(game) {
       };
     })
     .filter((p) => p.name);
-  // active players who haven't buzzed
   const activePlayers = orderBy(
     players.filter((p) => !some(queue, (q) => q.id === p.id)),
     ['connected', 'name'],
@@ -143,6 +138,14 @@ export default function Table(game) {
       <Container>
         <section>
           <p id="room-title">Room {game.gameID}</p>
+          <Card className="mb-4" style={{ width: '50%', color: 'black', margin: '0 auto' }}>
+            <Card.Body>
+              <Card.Title>Category</Card.Title>
+              <Card.Text>{game.G.category}</Card.Text>
+              <Card.Title>Question</Card.Title>
+              <Card.Text>{game.G.question ? game.G.question : 'No question selected'}</Card.Text>
+            </Card.Body>
+          </Card>
           {!game.isConnected ? (
             <p className="warning">Disconnected - attempting to reconnect...</p>
           ) : null}
